@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -82,13 +82,28 @@ export default function VideoPortfolio({ videos }: Readonly<VideoPortfolioProps>
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     const iframesRef = useRef<(HTMLIFrameElement | null)[]>([]);
     const [swiperInstance, setSwiperInstance] = useState<any>(null);
-    const [videoMetadata, setVideoMetadata] = useState<Record<string, VideoMetadata>>({});
     const portfolioVideos = useMemo(
         () =>
             videos
                 .map((video, index) => toPortfolioVideo(video, index))
                 .filter((video): video is PortfolioVideo => video !== null),
         [videos]
+    );
+    const videoMetadata = useMemo<Record<string, VideoMetadata>>(
+        () =>
+            Object.fromEntries(
+                portfolioVideos.map((video) => [
+                    video.id,
+                    {
+                        title: t("videos.sectionTitle"),
+                        authorName: "Mr. Nutrition",
+                        authorUrl: null,
+                        providerName: video.platform,
+                        thumbnailUrl: null,
+                    },
+                ])
+            ),
+        [portfolioVideos, t]
     );
 
     const pauseAllVideos = () => {
@@ -120,58 +135,6 @@ export default function VideoPortfolio({ videos }: Readonly<VideoPortfolioProps>
             swiperInstance.off("slideChange", handleSlideChange);
         };
     }, [swiperInstance]);
-
-    useEffect(() => {
-        if (!portfolioVideos.length) {
-            setVideoMetadata({});
-            return;
-        }
-
-        let cancelled = false;
-
-        const loadMetadata = async () => {
-            const results = await Promise.all(
-                portfolioVideos.map(async (video) => {
-                    try {
-                        const response = await fetch(
-                            `/api/youtube/oembed?url=${encodeURIComponent(video.publicUrl)}`
-                        );
-
-                        if (!response.ok) {
-                            return [video.id, null] as const;
-                        }
-
-                        const data = (await response.json()) as VideoMetadata;
-                        return [video.id, data] as const;
-                    } catch {
-                        return [video.id, null] as const;
-                    }
-                })
-            );
-
-            if (cancelled) {
-                return;
-            }
-
-            setVideoMetadata((prev) => {
-                const next = { ...prev };
-
-                results.forEach(([id, data]) => {
-                    if (data) {
-                        next[id] = data;
-                    }
-                });
-
-                return next;
-            });
-        };
-
-        void loadMetadata();
-
-        return () => {
-            cancelled = true;
-        };
-    }, [portfolioVideos]);
 
     return (
         <section

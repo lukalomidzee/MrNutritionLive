@@ -10,8 +10,10 @@ export default function AppShell({
                                  }: Readonly<{ children: React.ReactNode }>) {
     const pathname = usePathname();
 
+    const normalizedPathname = pathname.replace(/\/+$/, "");
     const hideChrome =
-        pathname.startsWith("/students/") && pathname.split("/").length === 3;
+        normalizedPathname.startsWith("/students/") &&
+        normalizedPathname.split("/").filter(Boolean).length === 2;
 
     return (
         <>

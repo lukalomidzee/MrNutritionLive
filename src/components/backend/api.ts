@@ -1,4 +1,13 @@
 import { http } from "@/lib/http";
+import {
+    mockAuthors,
+    mockCourseList,
+    mockCourses,
+    mockSiteDetails,
+    mockStudents,
+} from "./mockData";
+import { sitePath } from "@/lib/sitePath";
+import { STATIC_DEMO_ENABLED } from "@/lib/staticDemo";
 import type {
     AuthorDetailResponse,
     AuthorDTO,
@@ -19,7 +28,7 @@ import type {
     StudentsResponse,
 } from "./types.ts";
 
-const DEFAULT_COURSE_IMAGE = "/images/courses/course1.jpg";
+const DEFAULT_COURSE_IMAGE = sitePath("/images/courses/course1.jpg");
 
 function pickCoursePrice(course: RawCourseListDTO | RawCourseDetailDTO): Pick<CourseListDTO, "price" | "priceCurrency"> {
     if ((course.priceGEL ?? 0) > 0) {
@@ -272,6 +281,10 @@ function sortCoursesByDateDesc(items: CourseListDTO[]): CourseListDTO[] {
 }
 
 export async function fetchCourses(): Promise<CourseListDTO[]> {
+    if (STATIC_DEMO_ENABLED) {
+        return sortCoursesByDateDesc(mockCourseList).filter((course) => course.status === "Active");
+    }
+
     const { data } = await http.get<CoursesResponse>("/api/Courses");
     const normalized = (data.data ?? []).map(normalizeCourseListItem);
 
@@ -279,16 +292,32 @@ export async function fetchCourses(): Promise<CourseListDTO[]> {
 }
 
 export async function fetchCoursesAdmin(): Promise<CourseListDTO[]> {
+    if (STATIC_DEMO_ENABLED) {
+        return sortCoursesByDateDesc(mockCourseList);
+    }
+
     const { data } = await http.get<CoursesResponse>("/api/Courses");
     return sortCoursesByDateDesc((data.data ?? []).map(normalizeCourseListItem));
 }
 
 export async function fetchCourseById(id: string): Promise<CourseDetailDTO> {
+    if (STATIC_DEMO_ENABLED) {
+        const course = mockCourses.find((item) => item.id === id);
+        if (!course) throw new Error("Course not found");
+        return course;
+    }
+
     const { data } = await http.get<CourseDetailResponse>(`/api/Courses/${id}`);
     return normalizeCourseDetail(data.data);
 }
 
 export async function fetchAuthorById(id: string): Promise<AuthorDTO> {
+    if (STATIC_DEMO_ENABLED) {
+        const author = mockAuthors.find((item) => item.id === id);
+        if (!author) throw new Error("Author not found");
+        return author;
+    }
+
     const { data } = await http.get<AuthorDetailResponse>(`/api/Authors/${id}`, {
         params: { includeAllMedia: true },
     });
@@ -296,6 +325,10 @@ export async function fetchAuthorById(id: string): Promise<AuthorDTO> {
 }
 
 export async function fetchStudents(): Promise<StudentDTO[]> {
+    if (STATIC_DEMO_ENABLED) {
+        return mockStudents;
+    }
+
     const { data } = await http.get<StudentsResponse>("/api/Students", {
         params: { includeAllMedia: true },
     });
@@ -303,6 +336,12 @@ export async function fetchStudents(): Promise<StudentDTO[]> {
 }
 
 export async function fetchStudentById(id: string): Promise<StudentDTO> {
+    if (STATIC_DEMO_ENABLED) {
+        const student = mockStudents.find((item) => item.id === id);
+        if (!student) throw new Error("Student not found");
+        return student;
+    }
+
     const { data } = await http.get<{ data: RawStudentDTO; message: string; success: boolean }>(
         `/api/Students/${id}`,
         { params: { includeAllMedia: true } }
@@ -311,6 +350,10 @@ export async function fetchStudentById(id: string): Promise<StudentDTO> {
 }
 
 export async function fetchSiteDetails(): Promise<SiteDetailDTO[]> {
+    if (STATIC_DEMO_ENABLED) {
+        return mockSiteDetails;
+    }
+
     const { data } = await http.get<SiteDetailsResponse>("/api/sitedetails", {
         params: { includeAllMedia: true },
     });

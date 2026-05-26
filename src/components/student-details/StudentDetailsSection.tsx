@@ -4,6 +4,7 @@ import React from "react";
 import { motion, Variants } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { sitePath } from "@/lib/sitePath";
 
 export default function StudentDetailsSection({ student, getLang }: any) {
     const { t, i18n } = useTranslation();
@@ -13,7 +14,7 @@ export default function StudentDetailsSection({ student, getLang }: any) {
 
     const firstName = getLang(student.firstNameGeo, student.firstName);
     const lastName = getLang(student.lastNameGeo, student.lastName);
-    const photo = student.coverUrl || "/images/default.jpg";
+    const photo = student.coverUrl || sitePath("/images/courses/course1.jpg");
     const age = student.age || t("student.ageValue");
     const email = student.email || t("student.emailValue");
     const phone = student.phoneNumber || t("student.phoneNumberValue");

@@ -5,6 +5,7 @@ import { Quote, Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { StudentDTO } from "@/components/backend/types";
 import { useRouter } from "next/navigation";
+import { sitePath } from "@/lib/sitePath";
 
 export default function StudentCard({ student }: Readonly<{ student: StudentDTO }>) {
     const { i18n } = useTranslation();
@@ -15,6 +16,7 @@ export default function StudentCard({ student }: Readonly<{ student: StudentDTO 
     const lastName = isGeorgian ? student.lastNameGeo : student.lastName;
     const about = isGeorgian ? student.aboutGeo : student.about;
     const recommendedLabel = "Recommended";
+    const imageUrl = student.coverUrl || sitePath("/images/backgrounds/students-together.jpeg");
 
     return (
         <Card
@@ -53,7 +55,7 @@ export default function StudentCard({ student }: Readonly<{ student: StudentDTO 
             <CardMedia
                 component="img"
                 height="240"
-                image={student.coverUrl ?? "https://via.placeholder.com/400x240?text=No+Image"}
+                image={imageUrl}
                 alt={`${firstName} ${lastName}`}
                 sx={{
                     objectFit: "cover",

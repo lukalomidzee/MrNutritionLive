@@ -4,6 +4,8 @@ import React from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import { useTranslation } from "react-i18next";
+import { mockYouTubeChannels } from "@/components/backend/mockData";
+import { sitePath } from "@/lib/sitePath";
 
 type ChannelFeed = {
     key: "mrNutrition" | "nutritionAcademy";
@@ -22,37 +24,14 @@ const CHANNEL_URLS = {
 } as const;
 
 const CHANNEL_LOGOS = {
-    mrNutrition: "/images/logos/site_logo_green.png",
-    nutritionAcademy: "/images/logos/site_logo.png",
+    mrNutrition: sitePath("/images/logos/site_logo_green.png"),
+    nutritionAcademy: sitePath("/images/logos/site_logo.png"),
 } as const;
 
 export default function YouTubeChannelsSection() {
     const { t, i18n } = useTranslation();
-    const [channels, setChannels] = React.useState<ChannelFeed[]>([]);
-    const [loading, setLoading] = React.useState(true);
-
-    React.useEffect(() => {
-        let alive = true;
-
-        const load = async () => {
-            try {
-                const res = await fetch("/api/youtube/channels");
-                const data = await res.json();
-                if (alive) {
-                    setChannels(Array.isArray(data?.channels) ? data.channels : []);
-                }
-            } catch {
-                if (alive) setChannels([]);
-            } finally {
-                if (alive) setLoading(false);
-            }
-        };
-
-        load();
-        return () => {
-            alive = false;
-        };
-    }, []);
+    const channels = mockYouTubeChannels;
+    const loading = false;
 
     const fallbackChannels: ChannelFeed[] = [
         {
@@ -77,7 +56,7 @@ export default function YouTubeChannelsSection() {
         },
     ];
 
-    const list = channels.length ? channels : fallbackChannels;
+    const list: ChannelFeed[] = channels.length ? channels : fallbackChannels;
 
     const formatDate = (isoDate: string | null) => {
         if (!isoDate) return "";

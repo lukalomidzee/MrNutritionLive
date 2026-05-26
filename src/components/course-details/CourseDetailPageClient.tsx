@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import AuthorCard from "@/components/course-details/AuthorCard";
 import StickyTriptychScroll, { Section } from "@/components/course-details/StickyTriptychScroll";
 import { useAuthor, useCourse } from "@/components/backend/hooks";
+import { sitePath } from "@/lib/sitePath";
 
 export default function CourseDetailPageClient() {
     const { id } = useParams<{ id: string }>();
@@ -30,7 +31,7 @@ export default function CourseDetailPageClient() {
         eur: "EUR",
     };
 
-    if (loading) {
+    if (loading || (!error && !course)) {
         return (
             <Box textAlign="center" py={10}>
                 <Typography>{isHydrated ? `${t("loading")}...` : "Loading..."}</Typography>
@@ -59,12 +60,15 @@ export default function CourseDetailPageClient() {
     const purchaseCta = isGeorgian ? "\u10e8\u10d4\u10e1\u10d0\u10eb\u10d4\u10dc\u10d0\u10d3 \u10db\u10dd\u10d2\u10d5\u10ec\u10d4\u10e0\u10d4\u10d7" : "Message us to purchase";
     const syllabusCta = isGeorgian ? "\u10e1\u10d8\u10da\u10d0\u10d1\u10e3\u10e1\u10d8" : "Syllabus";
     const syllabusPdfUrl = course.courseMaterials?.syllabusUrl ?? null;
+    const fallbackCourseImage = sitePath("/images/courses/course1.jpg");
+    const courseCoverUrl = course.courseMaterials?.coverUrl || fallbackCourseImage;
+    const courseBackgroundUrl = course.courseMaterials?.backgroundUrl || courseCoverUrl;
 
     const scrollSections: Section[] = (course.courseMaterials?.sections ?? []).map((sec) => ({
         id: sec.id,
         title: isGeorgian ? sec.headingGeo : sec.heading,
         text: isGeorgian ? sec.paragraphGeo : sec.paragraph,
-        image: sec.coverUrl ?? course.courseMaterials?.coverUrl ?? "/images/courses/course1.jpg",
+        image: sec.coverUrl || courseCoverUrl,
     }));
 
     return (
@@ -73,9 +77,7 @@ export default function CourseDetailPageClient() {
                 component="section"
                 sx={{
                     minHeight: "100dvh",
-                    backgroundImage: course.courseMaterials?.backgroundUrl
-                        ? `url(${course.courseMaterials.backgroundUrl})`
-                        : "linear-gradient(135deg, #005841, #123257)",
+                    backgroundImage: `url(${courseBackgroundUrl})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     display: "flex",
@@ -87,22 +89,20 @@ export default function CourseDetailPageClient() {
                     py: { xs: 6, md: 8 },
                 }}
             >
-                {course.courseMaterials?.coverUrl && (
-                    <Box
-                        component="img"
-                        src={course.courseMaterials.coverUrl}
-                        alt={title}
-                        sx={{
-                            marginLeft: { md: "200px" },
-                            maxWidth: { xs: 280, md: 500 },
-                            width: "100%",
-                            borderRadius: 4,
-                            boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
-                            objectFit: "cover",
-                            display: "block",
-                        }}
-                    />
-                )}
+                <Box
+                    component="img"
+                    src={courseCoverUrl}
+                    alt={title}
+                    sx={{
+                        marginLeft: { md: "200px" },
+                        maxWidth: { xs: 280, md: 500 },
+                        width: "100%",
+                        borderRadius: 4,
+                        boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                        objectFit: "cover",
+                        display: "block",
+                    }}
+                />
 
                 <Paper
                     elevation={6}

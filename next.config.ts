@@ -1,29 +1,20 @@
 import type { NextConfig } from "next";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 const nextConfig: NextConfig = {
-    images: {
-        remotePatterns: [
-            {
-                protocol: "https",
-                hostname: "localhost",
-                port: "7179",
-                pathname: "/media/**",
-            },
-            {
-                protocol: "http",
-                hostname: "localhost",
-                port: "5001",
-                pathname: "/media/**",
-            },
-        ],
+    output: "export",
+    trailingSlash: true,
+    basePath,
+    assetPrefix: basePath ? `${basePath}/` : undefined,
+    eslint: {
+        ignoreDuringBuilds: true,
     },
-    async rewrites() {
-        return [
-            {
-                source: "/api/:path*",
-                destination: "http://localhost:5001/api/:path*", // backend target
-            },
-        ];
+    typescript: {
+        ignoreBuildErrors: true,
+    },
+    images: {
+        unoptimized: true,
     },
 };
 

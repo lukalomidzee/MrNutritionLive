@@ -23,6 +23,7 @@ import {
     FaYoutube,
 } from "react-icons/fa";
 import type { AuthorDTO, AuthorSocialLinkDTO } from "@/components/backend/types";
+import { sitePath } from "@/lib/sitePath";
 
 import certificate1 from "../../../public/images/certificates/certificate1.jpg";
 
@@ -803,7 +804,7 @@ const AuthorCard: React.FC<AuthorCardProps> = ({ author }) => {
                                             >
                                                 <Box
                                                     component="img"
-                                                    src={item.thumbnailUrl ?? "/images/courses/course1.jpg"}
+                                                    src={item.thumbnailUrl ?? sitePath("/images/courses/course1.jpg")}
                                                     alt={item.title ?? `Playlist video ${index + 1}`}
                                                     sx={{
                                                         width: "100%",

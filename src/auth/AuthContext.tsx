@@ -3,6 +3,7 @@
 import { createContext, FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { User } from "oidc-client-ts";
 import { getUserManager } from "./authService";
+import { STATIC_DEMO_ENABLED } from "@/lib/staticDemo";
 
 type RoleClaim = string | string[];
 
@@ -19,8 +20,14 @@ export const AuthContext = createContext<IAuthContext | null>(null);
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const staticDemo = STATIC_DEMO_ENABLED;
 
     useEffect(() => {
+        if (staticDemo) {
+            setUser(null);
+            return;
+        }
+
         const um = getUserManager();
 
         const loadUser = async () => {
@@ -43,9 +50,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
             um.events.removeUserUnloaded(userUnloaded);
             um.events.removeUserSignedOut(userSignedOut);
         };
-    }, []);
+    }, [staticDemo]);
 
     const login = async () => {
+        if (staticDemo) return;
         try {
             await getUserManager().signinRedirect();
         } catch (error) {
@@ -58,6 +66,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     };
 
     const logout = async () => {
+        if (staticDemo) return;
         try {
             await getUserManager().signoutRedirect();
         } catch (error) {

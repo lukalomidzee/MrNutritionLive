@@ -4,6 +4,7 @@ import React from "react";
 import { Box, Button, Typography, Stack } from "@mui/material";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { sitePath } from "@/lib/sitePath";
 
 export type CourseCardProps = {
     id: string;
@@ -32,7 +33,7 @@ const CourseCard: React.FC<Props> = ({ course, variant = "paid" }) => {
         currencySymbols[course.currency?.toUpperCase()] ?? course.currency;
     const priceLabel =
         course.price > 0 ? `${currencySymbol} ${course.price}` : t("free");
-    const imageUrl = course.image ?? "/images/courses/course1.jpg";
+    const imageUrl = course.image || sitePath("/images/courses/course1.jpg");
 
     return (
         <Box

@@ -2,6 +2,7 @@ import { AppBar, Box } from "@mui/material";
 import Link from "next/link";
 import HeaderShellClient from "./HeaderShellClient";
 import HeaderClient from "./HeaderClient";
+import { sitePath } from "@/lib/sitePath";
 
 export default function Header() {
     return (
@@ -23,7 +24,7 @@ export default function Header() {
                 <Link href="/" style={{ textDecoration: "none" }}>
                     <Box
                         component="img"
-                        src="/images/logos/logo_black.png"
+                        src={sitePath("/images/logos/logo_black.png")}
                         alt="Logo"
                         sx={{
                             p: { xs: 1, sm: 1.5, md: 2 },

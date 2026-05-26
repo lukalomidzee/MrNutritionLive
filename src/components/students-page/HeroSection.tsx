@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import { useSiteDetails } from "@/components/backend/hooks";
+import { sitePath } from "@/lib/sitePath";
 
 export default function HeroSection() {
     const { t, i18n } = useTranslation();
@@ -24,7 +25,7 @@ export default function HeroSection() {
         ? studentsPage?.subtitleGeo || studentsPage?.subtitle || ""
         : studentsPage?.subtitle || studentsPage?.subtitleGeo || "";
 
-    const backgroundUrl = studentsPage?.backgroundUrl ?? null;
+    const backgroundUrl = studentsPage?.backgroundUrl || sitePath("/images/backgrounds/students-together.jpeg");
     const titleColor = studentsPage?.titleColor ?? null;
     const subtitleColor = studentsPage?.subtitleColor ?? null;
 

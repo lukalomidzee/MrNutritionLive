@@ -10,6 +10,7 @@ import {Mousewheel, Navigation} from "swiper/modules";
 import {animate, AnimatePresence, motion, useMotionValue} from "framer-motion";
 import gsap from "gsap";
 import {useStudent} from "@/components/backend/hooks";
+import { sitePath } from "@/lib/sitePath";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -86,7 +87,7 @@ export default function StudentDetailPage({id}: Readonly<{ id: string }>) {
                 <Box sx={{display: "flex", alignItems: "center", gap: {xs: 2, md: 8}}}>
                     <Box
                         component="img"
-                        src="/images/logos/logo_orange.png"
+                        src={sitePath("/images/logos/logo_orange.png")}
                         alt="Nutrition Academy Logo"
                         sx={{
                             height: {xs: 72, md: 150},
@@ -195,7 +196,7 @@ export default function StudentDetailPage({id}: Readonly<{ id: string }>) {
                             left: 0,
                             width: "100vw",
                             height: "100vh",
-                            backgroundImage: "url(/images/courses/course1.jpg)",
+                            backgroundImage: `url(${sitePath("/images/courses/course1.jpg")})`,
                             backgroundSize: "cover",
                             backgroundPosition: "center",
                             backgroundAttachment: "fixed",

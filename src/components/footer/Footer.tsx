@@ -1,6 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import FooterClient from "./FooterClient";
+import { sitePath } from "@/lib/sitePath";
 
 export default function Footer() {
     return (
@@ -23,7 +24,7 @@ export default function Footer() {
             }}
         >
             <Image
-                src="/images/logos/logo_white.png"
+                src={sitePath("/images/logos/logo_white.png")}
                 alt="Mr. Nutrition Logo"
                 width={200}
                 height={80}

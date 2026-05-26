@@ -3,6 +3,7 @@
 import { Box, Button, Menu, MenuItem } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { sitePath } from "@/lib/sitePath";
 
 interface LanguageObjectType {
     code: string;
@@ -11,8 +12,8 @@ interface LanguageObjectType {
 }
 
 const LANGUAGES: LanguageObjectType[] = [
-    { code: "ka", name: "ქართული", flag: "/images/flags/ge.svg" },
-    { code: "en", name: "English", flag: "/images/flags/gb.svg" },
+    { code: "ka", name: "ქართული", flag: sitePath("/images/flags/ge.svg") },
+    { code: "en", name: "English", flag: sitePath("/images/flags/gb.svg") },
 ];
 
 const STORAGE_KEY = "lang";
