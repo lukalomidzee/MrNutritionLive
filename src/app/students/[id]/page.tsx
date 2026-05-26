@@ -1,9 +1,11 @@
 import React from "react";
 import StudentDetailPage from "@/components/student-details/StudentDetailPage";
-import { mockStudents } from "@/components/backend/mockData";
 
 export function generateStaticParams() {
-    return mockStudents.map((student) => ({ id: student.id }));
+    return [
+        { id: "mariam-gelashvili" },
+        { id: "dato-kapanadze" },
+    ];
 }
 
 export default function StudentDetail({
